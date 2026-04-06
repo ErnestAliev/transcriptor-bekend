@@ -11,6 +11,23 @@ export function errorHandler(error, req, res, next) {
     return next(error);
   }
 
+  console.error(
+    JSON.stringify(
+      {
+        level: "error",
+        method: req.method,
+        url: req.originalUrl,
+        message: error?.message,
+        statusCode: error?.statusCode,
+        status: error?.status,
+        name: error?.name,
+        cause: error?.cause?.message
+      },
+      null,
+      2
+    )
+  );
+
   if (error instanceof multer.MulterError) {
     const statusCode = error.code === "LIMIT_FILE_SIZE" ? 413 : 400;
     return res.status(statusCode).json({
